@@ -18,6 +18,7 @@ def get_text(obj):
 	return text
 
 class GlobalPlugin(globalPluginHandler.GlobalPlugin):
+	scriptCategory = _("Jump to Window")
 
 	def script_find_window(self, gesture):
 		dlg = wx.TextEntryDialog(gui.mainFrame, _("Search For:"), _("Jump To Window"))
@@ -26,6 +27,8 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			if result == wx.ID_OK:
 				wx.CallLater(100, self.find, dlg.GetValue())
 		gui.runScriptModalDialog(dlg, callback)
+
+	script_find_window.__doc__ = _("""Focus a window whose title or console text contains the supplied value""")
 
 	def find(self, text):
 		"""Find a window with the supplied text in its title.
