@@ -25,7 +25,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 
 		def callback(result):
 			if result == wx.ID_OK:
-				wx.CallLater(100, self.find, dlg.GetValue())
+				wx.CallLater(50, self.find, dlg.GetValue())
 		gui.runScriptModalDialog(dlg, callback)
 
 	script_find_window.__doc__ = _("""Focus a window whose title or console text contains the supplied value""")
@@ -35,15 +35,16 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 		If the text isn't found in any title, search the text of consoles."""
 		consoles = set()
 		text = text.lower()
-		for c in api.getDesktopObject().children:
-			name = c.name
+		windows = reversed(list(api.getDesktopObject().children))
+		for w in windows:
+			name = w.name
 			if name is None:
 				continue
 			if text in name.lower():
-				focus(c.windowHandle)
+				focus(winConsoleHandler.windowHandle)
 				return
-			elif c.windowClassName == u'ConsoleWindowClass':
-				consoles.add(c)
+			elif w.windowClassName == u'ConsoleWindowClass':
+				consoles.add(w)
 
 		#We didn't find the search text in the title, start searching consoles
 		current_console = winConsoleHandler.consoleObject
