@@ -1,17 +1,21 @@
-import globalPluginHandler
-import ui
-import api
-import textInfos
+import re
 import threading
+from ctypes import windll
+
+import 	api
+import controlTypes
+import globalPluginHandler
 import gui
+import textInfos
+import tones
+import ui
 import winConsoleHandler
 import winUser
-import controlTypes
-from ctypes import windll
-import tones
+
 user32 = windll.user32
 
 import wx
+
 
 def get_text(obj):
 	text = obj.makeTextInfo(textInfos.POSITION_ALL).text
@@ -21,53 +25,59 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 	scriptCategory = _("Jump to Window")
 
 	def script_find_window(self, gesture):
-		dlg = wx.TextEntryDialog(gui.mainFrame, _("Search For:"), _("Jump To Window"))
+		dlg = wx.TextEntryDialog(parent=gui.mainFrame, message=_("Search Term (or regexp):"), caption=_("Jump To Window"))
 
 		def callback(result):
 			if result == wx.ID_OK:
 				wx.CallLater(50, self.find, dlg.GetValue())
 		gui.runScriptModalDialog(dlg, callback)
 
-	script_find_window.__doc__ = _("""Focus a window whose title or console text contains the supplied value""")
+	script_find_window.__doc__ = _("""Focus a window whose title or console text matches the supplied value or regular expression""")
 
 	def find(self, text):
-		"""Find a window with the supplied text in its title.
-		If the text isn't found in any title, search the text of consoles."""
-		consoles = set()
-		text = text.lower()
+		"""Find a window whose title matches the provided regexp.
+		If no title matches, search the text of consoles."""
+		consoles = []
+		regexp = re.compile(text, re.IGNORECASE)
 		windows = reversed(list(api.getDesktopObject().children))
 		for w in windows:
 			name = w.name
 			if name is None:
 				continue
-			if text in name.lower():
+			if regexp.search(name) is not None:
 				focus(winConsoleHandler.windowHandle)
 				return
 			elif w.windowClassName == u'ConsoleWindowClass':
-				consoles.add(w)
+				consoles.append(w)
 
 		#We didn't find the search text in the title, start searching consoles
 		current_console = winConsoleHandler.consoleObject
-		# If our current console is the one with the text in it, presumably we want another one, and if one isn't found, we'll refocus anyway
+		# While we would refocus our current console if there were no text found, the UI would still give an error beep
+		# And therefore we wouldn't know if the text is in the console.
 		if current_console is not None:
 			consoles.remove(current_console)
+			consoles.append(current_console)
 		for console in consoles:
-			#We assume this can't fail
-			console_text = get_console_text(console)
-			if text in console_text.lower():
-				focus(console.windowHandle)
-				return
+			try:
+				console_text = get_console_text(console)
+				if text in console_text.lower():
+					focus(console.windowHandle)
+					return
+			except:
+					continue
 		else: #No consoles found
 			if current_console:
 				winConsoleHandler.connectConsole(current_console)
 				if current_console == api.getFocusObject():
 					current_console.startMonitoring() #Keep echoing if we didn't switch
+		self.did_fail()
+
+	def did_fail(self):
 		tones.beep(300, 150)
 
 	__gestures = {
 		"kb:NVDA+\\": "find_window",
 	}
-
 
 def focus(hwnd):
 	"""Try whatever we can to focus this window."""
