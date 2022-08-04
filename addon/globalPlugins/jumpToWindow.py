@@ -45,7 +45,7 @@ class GlobalPlugin(globalPluginHandler.GlobalPlugin):
 			if name is None:
 				continue
 			if regexp.search(name) is not None:
-				focus(winConsoleHandler.windowHandle)
+				focus(w.windowHandle)
 				return
 			elif w.windowClassName == u'ConsoleWindowClass':
 				consoles.append(w)
