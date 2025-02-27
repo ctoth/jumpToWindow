@@ -21,7 +21,7 @@ addon_info = {
 	# Translators: Long description to be shown for this add-on on add-on information from add-ons manager
 	"addon_description" : _("""Search for a window by title or text in terminal windows and focus the first match"""),
 	# version
-	"addon_version" : "0.6",
+	"addon_version" : "0.7",
 	# Author(s)
 	"addon_author" : u"Tyler Spivey <tspivey@pcdesk.net>, Christopher Toth <q@q-continuum.net>",
 	# URL for the add-on documentation support
@@ -31,7 +31,7 @@ addon_info = {
 	# Minimum NVDA version supported (e.g. "2018.3.0", minor version is optional)
 	"addon_minimumNVDAVersion": "2019.3",
 	# Last NVDA version supported/tested (e.g. "2018.4.0", ideally more recent than minimum version)
-	"addon_lastTestedNVDAVersion": "2024.2",
+	"addon_lastTestedNVDAVersion": "2024.3",
 	# Add-on update channel (default is None, denoting stable releases, and for development releases, use "dev"; do not change unless you know what you are doing)
 	"addon_updateChannel" : None,
 }
