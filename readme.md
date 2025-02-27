@@ -1,6 +1,6 @@
 # Jump to Window NVDA Add-on #
 
-This add-on allows NVDA users to quickly jump to windows by searching for text in their titles or console content.
+This add-on, first developed in 2015, allows NVDA users to quickly jump to windows by searching for text in their titles or console content.
 
 ## Features
 
@@ -19,7 +19,7 @@ This add-on allows NVDA users to quickly jump to windows by searching for text i
 For details about NVDA add-on development, please see the [NVDA Add-on Development Guide](https://github.com/nvdaaddons/DevGuide/wiki/NVDA-Add-on-Development-Guide).
 The NVDA add-on development/discussion list [is here](https://nvda-addons.groups.io/g/nvda-addons)
 
-Copyright (C) 2023-2025 Jump to Window add-on contributors.
+Copyright (C) 2015-2025 Jump to Window add-on contributors.
 
 This package is distributed under the terms of the GNU General Public License, version 2 or later. Please see the file COPYING.txt for further details.
 
